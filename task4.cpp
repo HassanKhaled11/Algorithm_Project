@@ -3,7 +3,7 @@
  *
  * @Solution Algorithm: Divide and conquer 
  * 
- * @Explanation: number all the 1000 barrels from 0 -> 999 in binary format, suppose that we have
+ * @Description: number all the 1000 barrels from 0 -> 999 in binary format, suppose that we have
  * 10 slaves, then slave#1 will drink from all the barrels that have the first digit equals to 1 
  * for ex. (0000000001, 0000000011, 0000000101, 0000000111, ...etc), and slave#2 will drink 
  * from barrels that have the second digit equals to 1 for ex. (0000000010, 0000000011, 0000000110, ...etc)
