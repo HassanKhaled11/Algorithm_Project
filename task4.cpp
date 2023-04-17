@@ -28,6 +28,7 @@
  *         taken to fill the vector of strings "barrelNumber" is not considered 
  *      3- storing the barrels from which each slave drinks is also not considered a part from 
  *         the algorithm, it is just for visualization
+ *      4- All slaves drink from their barrels at the same time
 */
 
 #include<iostream>
