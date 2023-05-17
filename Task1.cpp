@@ -19,7 +19,6 @@ using namespace std;
 #define GREEN_COLOR         'G'         // the center
 #define BLUE_COLOR          'B'         // top left and bottom right
 
-bool firstIteration = true;
 
 typedef enum
 {
@@ -44,7 +43,7 @@ void print(vector<vector<char>>v, int n)
     }
 }
 
-void fill_center_first_time(vector<vector<char>>& v, vector<pair<int, int>>centerPoints, int xMiss, int yMiss, int xStart, int xEnd, int yStart, int yEnd)
+void fill_center_with_miss(vector<vector<char>>& v, vector<pair<int, int>>centerPoints, int xMiss, int yMiss, int xStart, int xEnd, int yStart, int yEnd)
 {
     /*Check whether the missing square is in the top right sub grid*/
     if ((xMiss >= centerPoints[topRight].first && xMiss <= xEnd) &&
@@ -80,27 +79,52 @@ void fill_center_first_time(vector<vector<char>>& v, vector<pair<int, int>>cente
 }
 
 
-void fill_center_with_missing(vector<vector<char>>&v, vector<pair<int, int>>centerPoints, int xMiss, int yMiss)
-{
-    /*Fill all the central points with GREEN_COLOR*/
-    v[centerPoints[topLeft].second][centerPoints[topLeft].first] = GREEN_COLOR;
-    v[centerPoints[topRight].second][centerPoints[topRight].first] = GREEN_COLOR;
-    v[centerPoints[bottomLeft].second][centerPoints[bottomLeft].first] = GREEN_COLOR;
-    v[centerPoints[bottomRight].second][centerPoints[bottomRight].first] = GREEN_COLOR;
+// void fill_center_with_missing(vector<vector<char>>&v, vector<pair<int, int>>centerPoints, int xMiss, int yMiss)
+// {
+//     /*Fill all the central points with GREEN_COLOR*/
+//     v[centerPoints[topLeft].second][centerPoints[topLeft].first] = GREEN_COLOR;
+//     v[centerPoints[topRight].second][centerPoints[topRight].first] = GREEN_COLOR;
+//     v[centerPoints[bottomLeft].second][centerPoints[bottomLeft].first] = GREEN_COLOR;
+//     v[centerPoints[bottomRight].second][centerPoints[bottomRight].first] = GREEN_COLOR;
 
-    /*Reset the MISSING_SYMBOL in its positon*/
-    if (xMiss == centerPoints[topLeft].first && yMiss == centerPoints[topLeft].second)
-        v[centerPoints[topLeft].second][centerPoints[topLeft].first] = MISSING_SYMBOL;
-    else if (xMiss == centerPoints[topRight].first && yMiss == centerPoints[topRight].second)
-        v[centerPoints[topRight].second][centerPoints[topRight].first] = MISSING_SYMBOL;
-    else if (xMiss == centerPoints[bottomLeft].first && yMiss == centerPoints[bottomLeft].second)
-        v[centerPoints[bottomLeft].second][centerPoints[bottomLeft].first] = MISSING_SYMBOL;
-    else
-        v[centerPoints[bottomRight].second][centerPoints[bottomRight].first] = MISSING_SYMBOL;
+//     /*Reset the MISSING_SYMBOL in its positon*/
+//     if (xMiss == centerPoints[topLeft].first && yMiss == centerPoints[topLeft].second)
+//         v[centerPoints[topLeft].second][centerPoints[topLeft].first] = MISSING_SYMBOL;
+//     else if (xMiss == centerPoints[topRight].first && yMiss == centerPoints[topRight].second)
+//         v[centerPoints[topRight].second][centerPoints[topRight].first] = MISSING_SYMBOL;
+//     else if (xMiss == centerPoints[bottomLeft].first && yMiss == centerPoints[bottomLeft].second)
+//         v[centerPoints[bottomLeft].second][centerPoints[bottomLeft].first] = MISSING_SYMBOL;
+//     else
+//         v[centerPoints[bottomRight].second][centerPoints[bottomRight].first] = MISSING_SYMBOL;
+// }
+
+
+void fill_all(vector<vector<char>>&v, int xStart, int yStart, int xEnd, int yEnd)
+{
+    /*Fill BLUE_COLOR squres*/
+    if(v[yStart][xStart] == EMPTY_SYMBOL) v[yStart][xStart] = BLUE_COLOR;
+    if(v[yStart][xStart + 1] == EMPTY_SYMBOL) v[yStart][xStart + 1] = BLUE_COLOR;
+    if(v[yStart + 1][xStart] == EMPTY_SYMBOL) v[yStart + 1][xStart] = BLUE_COLOR;
+    if(v[yStart + 1][xStart + 1] == EMPTY_SYMBOL) v[yStart + 1][xStart + 1] = BLUE_COLOR;
+    if(v[yEnd][xEnd] == EMPTY_SYMBOL) v[yEnd][xEnd] = BLUE_COLOR;
+    if(v[yEnd - 1][xEnd] == EMPTY_SYMBOL) v[yEnd - 1][xEnd] = BLUE_COLOR;
+    if(v[yEnd][xEnd - 1] == EMPTY_SYMBOL) v[yEnd][xEnd - 1] = BLUE_COLOR;
+    if(v[yEnd - 1][xEnd - 1] == EMPTY_SYMBOL) v[yEnd - 1][xEnd - 1] = BLUE_COLOR;
+
+    /*Fill RED_COLOR squres*/
+    if(v[yStart][xEnd] == EMPTY_SYMBOL) v[yStart][xEnd] = RED_COLOR;
+    if(v[yStart][xEnd - 1] == EMPTY_SYMBOL) v[yStart][xEnd - 1] = RED_COLOR;
+    if(v[yStart + 1][xEnd] == EMPTY_SYMBOL) v[yStart + 1][xEnd] = RED_COLOR;
+    if(v[yStart + 1][xEnd - 1] == EMPTY_SYMBOL) v[yStart + 1][xEnd - 1] = RED_COLOR;
+    if(v[yEnd][xStart] == EMPTY_SYMBOL) v[yEnd][xStart] = RED_COLOR;
+    if(v[yEnd - 1][xStart] == EMPTY_SYMBOL) v[yEnd - 1][xStart] = RED_COLOR;
+    if(v[yEnd][xStart + 1] == EMPTY_SYMBOL) v[yEnd][xStart + 1] = RED_COLOR;
+    if(v[yEnd - 1][xStart + 1] == EMPTY_SYMBOL) v[yEnd - 1][xStart + 1] = RED_COLOR;
+    
 }
 
 
-void fill_center(vector<vector<char>>& v, ESubGrid subGrid, vector<pair<int, int>>centerPoints, int xMiss, int yMiss)
+void fill_center(vector<vector<char>>& v, ESubGrid subGrid, vector<pair<int, int>>centerPoints, int xMiss, int yMiss, int xStart, int xEnd, int yStart, int yEnd)
 {
     switch (subGrid)
     {
@@ -114,7 +138,7 @@ void fill_center(vector<vector<char>>& v, ESubGrid subGrid, vector<pair<int, int
         }
         /*This subgrid has the missing square*/
         else
-            fill_center_with_missing(v, centerPoints, xMiss, yMiss);
+            fill_center_with_miss(v, centerPoints, xMiss, yMiss, xStart, xEnd, yStart, yEnd);
         break;
     case bottomRight:
         /*Fill bottomRight sub grid center*/
@@ -126,7 +150,7 @@ void fill_center(vector<vector<char>>& v, ESubGrid subGrid, vector<pair<int, int
         }
         /*This subgrid has the missing square*/
         else
-            fill_center_with_missing(v, centerPoints, xMiss, yMiss);
+            fill_center_with_miss(v, centerPoints, xMiss, yMiss, xStart, xEnd, yStart, yEnd);
         break;
     case bottomLeft:
         /*Fill bottomLeft sub grid center*/
@@ -138,7 +162,7 @@ void fill_center(vector<vector<char>>& v, ESubGrid subGrid, vector<pair<int, int
         }
         /*This subgrid has the missing square*/
         else
-            fill_center_with_missing(v, centerPoints, xMiss, yMiss);
+            fill_center_with_miss(v, centerPoints, xMiss, yMiss, xStart, xEnd, yStart, yEnd);
         break;
     case topLeft:
         /*Fill bottomLeft sub grid center*/
@@ -149,8 +173,11 @@ void fill_center(vector<vector<char>>& v, ESubGrid subGrid, vector<pair<int, int
             v[centerPoints[bottomLeft].second][centerPoints[bottomLeft].first] = GREEN_COLOR;
         }
         /*This subgrid has the missing square*/
-        else        
-            fill_center_with_missing(v, centerPoints, xMiss, yMiss);        
+        else                          
+            fill_center_with_miss(v, centerPoints, xMiss, yMiss, xStart, xEnd, yStart, yEnd);
+        break;
+    case whole:
+            fill_center_with_miss(v, centerPoints, xMiss, yMiss, xStart, xEnd, yStart, yEnd);
         break;
     }
 
@@ -168,22 +195,13 @@ vector<pair<int, int>> fill(vector<vector<char>>& v, int xMiss, int yMiss, int x
     centerPoints[bottomLeft] = { xyStart[0].first + ((xEnd - xStart) / 2), xyStart[0].second + ((yEnd - yStart) / 2) + 1 };
     centerPoints[topLeft] = { xyStart[0].first + ((xEnd - xStart) / 2), xyStart[0].second + ((yEnd - yStart) / 2) };
 
+    fill_center(v, subGride, centerPoints, xMiss, yMiss, xStart, xEnd, yStart, yEnd);
+    if(xEnd - xStart == 3)    
+        fill_all(v, xStart, yStart, xEnd, yEnd);
 
-    if (firstIteration)
-    {
-        firstIteration = false;
-        fill_center_first_time(v, centerPoints, xMiss, yMiss, xStart, xEnd, yStart, yEnd);
-    }
-    else
-    {
-        fill_center(v, subGride, centerPoints, xMiss, yMiss);
-        
-    }
 
-    if (xEnd - xStart <= 3)
-    {                
-        return xyStart;
-    }
+    if (xEnd - xStart <= 3)                    
+        return xyStart;    
         
 
     /*Divide the grid into four sub grids*/
